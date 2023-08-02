@@ -7,4 +7,5 @@ app.get("/", () => console.log("server start GET geting"));
 
 app.listen(PORT, () => {
   console.log("server start");
+  console.log("server start");
 });
