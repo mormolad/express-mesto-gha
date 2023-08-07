@@ -9,9 +9,9 @@ const getUsers = (req, res) => {
 };
 
 const getUserById = (req, res) => {
-  const { id } = req.params;
-
-  return UserModel.findById(id)
+  const { userId } = req.params;
+  console.log(userId);
+  return UserModel.findById(userId)
     .then((user) => {
       if (!user) {
         return res.status(404).send({ message: "User not found" });
@@ -22,7 +22,9 @@ const getUserById = (req, res) => {
 };
 
 const createUser = (req, res) => {
-  return UserModel.create({ ...req.body })
+  console.log(req.body, " = body");
+  const { name, about, avatar } = req.body;
+  return UserModel.create({ name, about, avatar })
     .then((user) => {
       return res.status(201).send(user);
     })
@@ -46,13 +48,8 @@ const createUser = (req, res) => {
     });
 };
 
-const deleteUserById = (req, res) => {
-  res.send("Not ready");
-};
-
 module.exports = {
   getUsers,
   getUserById,
   createUser,
-  deleteUserById,
 };
