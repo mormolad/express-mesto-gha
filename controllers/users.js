@@ -1,28 +1,27 @@
 const UserModel = require("../models/user");
+const { noValid, noFind, errorServer } = require("../errors");
 
 const getUsers = (req, res) => {
   return UserModel.find()
     .then((users) => {
       return res.status(200).send(users);
     })
-    .catch((err) => res.status(500).send("Server Error"));
+    .catch((err) => res.status(errorServer.code).send(errorServer.message));
 };
 
 const getUserById = (req, res) => {
   const { userId } = req.params;
-  console.log(userId);
   return UserModel.findById(userId)
     .then((user) => {
       if (!user) {
-        return res.status(404).send({ message: "User not found" });
+        return res.status(noFind.code).send({ message: noFind.message });
       }
       return res.status(200).send(user);
     })
-    .catch((err) => res.status(500).send("Server Error"));
+    .catch((err) => res.status(errorServer.code).send(errorServer.message));
 };
 
 const createUser = (req, res) => {
-  console.log(req.body, " = body");
   const { name, about, avatar } = req.body;
   return UserModel.create({ name, about, avatar })
     .then((user) => {
@@ -31,20 +30,64 @@ const createUser = (req, res) => {
     .catch((err) => {
       console.log(err);
       if (err.name === "ValidationError") {
-        return res.status(400).send({
-          message: `${Object.values(err.errors)
-            .map((err) => err.message)
-            .join(", ")}`,
+        return res.status(noValid.code).send({
+          message: noValid.message,
         });
       }
-      if (err.name === "CastError") {
-        return res.status(400).send({
-          message: `${Object.values(err.errors)
-            .map((err) => err.message)
-            .join(", ")}`,
-        });
+      return res.status(errorServer.code).send(errorServer.message);
+    });
+};
+
+const updateProfile = (req, res) => {
+  return UserModel.findByIdAndUpdate(
+    req.user._id,
+    {
+      name: req.body.name,
+      about: req.body.about,
+    },
+    { new: true }
+  )
+    .then((user) => {
+      console.log(user);
+      if (!user) {
+        return res.status(noFind.code).send({ message: noFind.message });
       }
-      return res.status(500).send("Server Error");
+      return res.status(200).send(user);
+    })
+    .catch((err) => {
+      console.log(err);
+      if (err.name === "ValidationError") {
+        return res.status(noValid.code).send({
+          message: noValid.message,
+        });
+      } else {
+        return res.status(errorServer.code).send(errorServer.message);
+      }
+    });
+};
+const updateAvatar = (req, res) => {
+  return UserModel.findByIdAndUpdate(
+    req.user._id,
+    {
+      avatar: req.body.avatar,
+    },
+    { new: true }
+  )
+    .then((user) => {
+      if (!user) {
+        return res.status(noFind.code).send({ message: noFind.message });
+      }
+      return res.status(200).send(user);
+    })
+    .catch((err) => {
+      console.log(err);
+      if (err.name === "ValidationError") {
+        return res.status(noValid.code).send({
+          message: noValid.message,
+        });
+      } else {
+        return res.status(errorServer.code).send(errorServer.message);
+      }
     });
 };
 
@@ -52,4 +95,6 @@ module.exports = {
   getUsers,
   getUserById,
   createUser,
+  updateProfile,
+  updateAvatar,
 };

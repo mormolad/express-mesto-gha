@@ -48,8 +48,39 @@ const createCard = (req, res) => {
     });
 };
 
+const deleteLike = (req, res) => {
+  const { cardId } = req.params;
+
+  return UserModel.findByIdAndRemove(cardId)
+    .then((card) => {
+      if (!card) {
+        return res.status(404).send({ message: "Card not found" });
+      }
+      return res.status(200).send(card);
+    })
+    .catch((err) => {
+      res.status(500).send("Server Error");
+    });
+};
+
+const putLike = (req, res) => {
+  const { cardId } = req.params;
+  return UserModel.findByIdAndRemove(cardId)
+    .then((card) => {
+      if (!card) {
+        return res.status(404).send({ message: "Card not found" });
+      }
+      return res.status(200).send(card);
+    })
+    .catch((err) => {
+      res.status(500).send("Server Error");
+    });
+};
+
 module.exports = {
   getCards,
   deleteCard,
   createCard,
+  putLike,
+  deleteLike,
 };
