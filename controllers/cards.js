@@ -64,13 +64,17 @@ const deleteLike = (req, res) => {
 };
 
 const putLike = (req, res) => {
-  const { cardId } = req.params;
-  return CardModel.findByIdAndRemove(cardId)
+  console.log(req.params.cardId);
+  return CardModel.findByIdAndUpdate(
+    req.params.cardId,
+    { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
+    { new: true }
+  )
     .then((card) => {
       if (!card) {
         return res.status(404).send({ message: "Card not found" });
       }
-      return res.status(200).send(card);
+      return res.status(200).send({ message: card });
     })
     .catch((err) => {
       res.status(500).send("Server Error");
