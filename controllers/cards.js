@@ -50,7 +50,7 @@ const createCard = (req, res) => {
 };
 
 const deleteLike = (req, res) => {
-  return CardModel.findByIdAndRemove(
+  return CardModel.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } }, // убрать _id из массива
     { new: true }
