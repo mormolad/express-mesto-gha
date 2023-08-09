@@ -80,7 +80,7 @@ const putLike = (req, res) => {
   )
     .then((card) => {
       if (!card) {
-        return rres.status(noFind.code).send({ message: noFinds.message });
+        return res.status(noFind.code).send({ message: noFinds.message });
       }
       return res.status(200).send({ message: card.likes });
     })
