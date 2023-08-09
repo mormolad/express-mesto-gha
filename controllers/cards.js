@@ -56,11 +56,11 @@ const deleteLike = (req, res) => {
     { new: true }
   )
     .then((card) => {
-      console.log();
-      if (!card) {
+      if (card) {
+        return res.status(200).send({ message: card.likes });
+      } else {
         return res.status(noFind.code).send({ message: noFind.message });
       }
-      return res.status(200).send({ message: card.likes });
     })
     .catch((err) => {
       console.log(err.valueType);
