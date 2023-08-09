@@ -8,7 +8,7 @@ const dotenv = require("dotenv").config();
 const {
   PORT = 3000,
   MONGODB_URL = "mongodb://127.0.0.1:27017/mestodb",
-  USER_ID = "64d090499ab4855193d2f119",
+  USER_ID,
 } = process.env;
 // подключаемся к серверу mongo
 mongoose
