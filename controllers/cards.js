@@ -1,7 +1,7 @@
-const UserModel = require("../models/card");
+const CardModel = require("../models/card");
 
 const getCards = (req, res) => {
-  return UserModel.find()
+  return CardModel.find()
     .then((cards) => {
       return res.status(200).send(cards);
     })
@@ -10,7 +10,7 @@ const getCards = (req, res) => {
 
 const deleteCard = (req, res) => {
   const { cardId } = req.params;
-  return UserModel.findByIdAndRemove(cardId)
+  return CardModel.findByIdAndRemove(cardId)
     .then((card) => {
       if (!card) {
         return res.status(404).send({ message: "Card not found" });
@@ -24,7 +24,7 @@ const deleteCard = (req, res) => {
 
 const createCard = (req, res) => {
   const { name, link } = req.body;
-  return UserModel.create({ name, link, owner: req.user._id })
+  return CardModel.create({ name, link, owner: req.user._id })
     .then((card) => {
       return res.status(201).send(card);
     })
@@ -51,7 +51,7 @@ const createCard = (req, res) => {
 const deleteLike = (req, res) => {
   const { cardId } = req.params;
 
-  return UserModel.findByIdAndRemove(cardId)
+  return CardModel.findByIdAndRemove(cardId)
     .then((card) => {
       if (!card) {
         return res.status(404).send({ message: "Card not found" });
@@ -65,7 +65,7 @@ const deleteLike = (req, res) => {
 
 const putLike = (req, res) => {
   const { cardId } = req.params;
-  return UserModel.findByIdAndRemove(cardId)
+  return CardModel.findByIdAndRemove(cardId)
     .then((card) => {
       if (!card) {
         return res.status(404).send({ message: "Card not found" });

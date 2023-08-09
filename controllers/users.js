@@ -50,25 +50,23 @@ const createUser = (req, res) => {
 };
 
 const updateProfile = (req, res) => {
-  console.log(req.user._id);
   return UserModel.findByIdAndUpdate(
     req.user._id,
     {
       name: req.body.name,
       about: req.body.about,
     },
-    { new: true }
+    { new: true, runValidators: true }
   )
     .then((user) => {
       if (user) {
-        console.log(user, "должена быть код 200");
         return res.status(200).send({ message: user });
       } else {
         return res.status(noFind.code).send({ message: noFind.message });
       }
     })
     .catch((err) => {
-      console.log(err, "vsfgsdfgsdgf");
+      console.log(err);
       if (err.name === "ValidationError") {
         return res.status(noValid.code).send({
           message: noValid.message,
