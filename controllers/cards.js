@@ -1,4 +1,5 @@
 const CardModel = require("../models/card");
+const { noValid, noFind, errorServer } = require("../errors");
 
 const getCards = (req, res) => {
   return CardModel.find()
@@ -18,7 +19,7 @@ const deleteCard = (req, res) => {
       return res.status(200).send(card);
     })
     .catch((err) => {
-      res.status(500).send("Server Error");
+      res.status(errorServer.code).send(errorServer.message);
     });
 };
 
@@ -44,7 +45,7 @@ const createCard = (req, res) => {
             .join(", ")}`,
         });
       }
-      return res.status(500).send("Server Error");
+      return res.status(errorServer.code).send(errorServer.message);
     });
 };
 
@@ -64,20 +65,23 @@ const deleteLike = (req, res) => {
 };
 
 const putLike = (req, res) => {
-  console.log(req.params.cardId);
   return CardModel.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
-    { new: true }
+    { new: true, runValidators: true }
   )
     .then((card) => {
+      console.log(card);
       if (!card) {
         return res.status(404).send({ message: "Card not found" });
       }
       return res.status(200).send({ message: card });
     })
     .catch((err) => {
-      res.status(500).send("Server Error");
+      console.log(err.valueType);
+      err.valueType != "ObjectId"
+        ? res.status(noValid.code).send({ message: noValid.message })
+        : res.status(errorServer.code).send({ message: errorServer.message });
     });
 };
 
