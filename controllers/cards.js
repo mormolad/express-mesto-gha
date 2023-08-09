@@ -60,6 +60,7 @@ const deleteLike = (req, res) => {
         console.log(card, "code=200");
         return res.status(200).send({ message: card.likes });
       } else {
+        console.log(card, "code=404");
         return res.status(noFind.code).send({ message: noFind.message });
       }
     })
