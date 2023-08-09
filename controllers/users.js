@@ -20,10 +20,11 @@ const getUserById = (req, res) => {
       return res.status(200).send({ message: user });
     })
     .catch((err) => {
-      if (err.value === "6") {
+      console.log(err.name);
+      if (err.name === "CastError") {
         res.status(noFind.code).send({ message: noFind.message });
       } else {
-        res.status(errorServer.code).send({ message: errorServer.message });
+        res.status(errorServer.code).send({ message: err });
       }
     });
 };
