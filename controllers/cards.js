@@ -50,17 +50,22 @@ const createCard = (req, res) => {
 };
 
 const deleteLike = (req, res) => {
-  const { cardId } = req.params;
-
-  return CardModel.findByIdAndRemove(cardId)
+  return CardModel.findByIdAndRemove(
+    req.params.cardId,
+    { $pull: { likes: req.user._id } }, // убрать _id из массива
+    { new: true }
+  )
     .then((card) => {
       if (!card) {
-        return res.status(404).send({ message: "Card not found" });
+        return res.status(noFind.code).send({ message: noFind.message });
       }
-      return res.status(200).send(card);
+      return res.status(200).send({ message: card });
     })
     .catch((err) => {
-      res.status(500).send("Server Error");
+      console.log(err.valueType);
+      err.valueType != "ObjectId"
+        ? res.status(noValid.code).send({ message: noValid.message })
+        : res.status(errorServer.code).send({ message: errorServer.message });
     });
 };
 
@@ -71,9 +76,8 @@ const putLike = (req, res) => {
     { new: true, runValidators: true }
   )
     .then((card) => {
-      console.log(card);
       if (!card) {
-        return res.status(404).send({ message: "Card not found" });
+        return rres.status(noValid.code).send({ message: noValid.message });
       }
       return res.status(200).send({ message: card });
     })
