@@ -85,6 +85,7 @@ const putLike = (req, res) => {
       return res.status(200).send({ message: card.likes });
     })
     .catch((err) => {
+      console.log(err.valueType);
       err.valueType != "ObjectId"
         ? res.status(noValid.code).send({ message: noValid.message })
         : res.status(errorServer.code).send({ message: errorServer.message });
