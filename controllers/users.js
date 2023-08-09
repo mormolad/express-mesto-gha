@@ -60,14 +60,14 @@ const updateProfile = (req, res) => {
   )
     .then((user) => {
       if (user) {
+        console.log(user);
         return res.status(200).send({ message: user });
       } else {
-        console.log(user);
         return res.status(noFind.code).send({ message: noFind.message });
       }
     })
     .catch((err) => {
-      console.log(err);
+      console.log(err, "vsfgsdfgsdgf");
       if (err.name === "ValidationError") {
         return res.status(noValid.code).send({
           message: noValid.message,
