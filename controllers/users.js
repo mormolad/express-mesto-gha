@@ -12,7 +12,6 @@ const getUsers = (req, res) => {
 const getUserById = (req, res) => {
   const { userId } = req.params;
   return UserModel.findById(userId)
-
     .then((user) => {
       if (!user) {
         return res.status(noFind.code).send({ message: noFind.message });
@@ -22,6 +21,10 @@ const getUserById = (req, res) => {
     .catch((err) => {
       console.log(err.name);
       if (err.name === "CastError") {
+        console.log(noValid.code);
+        res.status(noValid.code).send({ message: noValid.message });
+      } else if (err.value === "6") {
+        console.log(noFind.code);
         res.status(noFind.code).send({ message: noFind.message });
       } else {
         res.status(errorServer.code).send({ message: err });
