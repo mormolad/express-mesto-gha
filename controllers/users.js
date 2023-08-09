@@ -21,11 +21,11 @@ const getUserById = (req, res) => {
       return res.status(200).send({ message: user });
     })
     .catch((err) => {
-      console.log(err.value);
+      console.log(noFind.message);
       if (err.value === "6") {
-        res.status(noFind.code).send(noFind.message);
+        res.status(noFind.code).send({ message: noFind.message });
       } else {
-        res.status(errorServer.code).send(errorServer.message);
+        res.status(errorServer.code).send({ message: errorServer.message });
       }
     });
 };
