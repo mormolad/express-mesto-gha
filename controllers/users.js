@@ -50,7 +50,6 @@ const createUser = (req, res) => {
 };
 
 const updateProfile = (req, res) => {
-  console.log(req.user._id);
   return UserModel.findByIdAndUpdate(
     req.user._id,
     {
@@ -61,9 +60,10 @@ const updateProfile = (req, res) => {
   )
     .then((user) => {
       if (!user) {
+        console.log(noFind.code);
         return res.status(noFind.code).send({ message: noFind.message });
       }
-      return res.status(200).send(user);
+      return res.status(200).send({ message: user });
     })
     .catch((err) => {
       console.log(err);
