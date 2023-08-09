@@ -14,14 +14,12 @@ const getUserById = (req, res) => {
   return UserModel.findById(userId)
 
     .then((user) => {
-      console.log(res);
       if (!user) {
         return res.status(noFind.code).send({ message: noFind.message });
       }
       return res.status(200).send({ message: user });
     })
     .catch((err) => {
-      console.log(noFind.message);
       if (err.value === "6") {
         res.status(noFind.code).send({ message: noFind.message });
       } else {
@@ -37,7 +35,6 @@ const createUser = (req, res) => {
       return res.status(201).send(user);
     })
     .catch((err) => {
-      console.log(err);
       if (err.name === "ValidationError") {
         return res.status(noValid.code).send({
           message: noValid.message,
