@@ -1,6 +1,7 @@
 const UserModel = require("../models/user");
 const { noValid, noFind, errorServer } = require("../errors");
-
+const dotenv = require("dotenv").config();
+const { USER_ID = "64d090499ab4855193d2f119" } = process.env;
 const getUsers = (req, res) => {
   return UserModel.find()
     .then((users) => {
@@ -49,6 +50,7 @@ const createUser = (req, res) => {
 };
 
 const updateProfile = (req, res) => {
+  console.log(req.user._id);
   return UserModel.findByIdAndUpdate(
     req.user._id,
     {
@@ -58,7 +60,6 @@ const updateProfile = (req, res) => {
     { new: true }
   )
     .then((user) => {
-      console.log(user);
       if (!user) {
         return res.status(noFind.code).send({ message: noFind.message });
       }
