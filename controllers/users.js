@@ -12,13 +12,22 @@ const getUsers = (req, res) => {
 const getUserById = (req, res) => {
   const { userId } = req.params;
   return UserModel.findById(userId)
+
     .then((user) => {
+      console.log(res);
       if (!user) {
         return res.status(noFind.code).send({ message: noFind.message });
       }
-      return res.status(200).send(user);
+      return res.status(200).send({ message: user });
     })
-    .catch((err) => res.status(errorServer.code).send(errorServer.message));
+    .catch((err) => {
+      console.log(err.value);
+      if (err.value === "6") {
+        res.status(noFind.code).send(noFind.message);
+      } else {
+        res.status(errorServer.code).send(errorServer.message);
+      }
+    });
 };
 
 const createUser = (req, res) => {
