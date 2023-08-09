@@ -60,7 +60,7 @@ const deleteLike = (req, res) => {
         console.log(card, "code=200");
         return res.status(200).send({ message: card.likes });
       } else {
-        console.log(card, "code=404");
+        console.log(card, noFind.code);
         return res.status(noFind.code).send({ message: noFind.message });
       }
     })
@@ -80,12 +80,12 @@ const putLike = (req, res) => {
   )
     .then((card) => {
       if (!card) {
-        return res.status(noFind.code).send({ message: noFinds.message });
+        return res.status(noFind.code).send({ message: noFind.message });
       }
       return res.status(200).send({ message: card.likes });
     })
     .catch((err) => {
-      console.log(err.valueType);
+      console.log(err);
       err.valueType != "ObjectId"
         ? res.status(noValid.code).send({ message: noValid.message })
         : res.status(errorServer.code).send({ message: errorServer.message });
