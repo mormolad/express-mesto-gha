@@ -59,11 +59,11 @@ const updateProfile = (req, res) => {
     { new: true }
   )
     .then((user) => {
-      console.log(user);
-      if (!user) {
-        return res.status(noFind.code).send({ message: noFind.message });
-      } else {
+      if (user) {
         return res.status(200).send({ message: user });
+      } else {
+        console.log(user);
+        return res.status(noFind.code).send({ message: noFind.message });
       }
     })
     .catch((err) => {
