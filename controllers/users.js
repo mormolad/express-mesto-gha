@@ -60,7 +60,7 @@ const updateProfile = (req, res) => {
   )
     .then((user) => {
       if (user) {
-        console.log(user);
+        console.log(user, "должена быть код 200");
         return res.status(200).send({ message: user });
       } else {
         return res.status(noFind.code).send({ message: noFind.message });
