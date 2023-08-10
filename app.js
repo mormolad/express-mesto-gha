@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const path = require("path");
 const routerUser = require("./routers/users");
 const routerCard = require("./routers/card");
+const router = require("./routers/index");
 const bodyParser = require("body-parser");
 const dotenv = require("dotenv").config();
 const { PORT = 3000, MONGODB_URL = "mongodb://127.0.0.1:27017/mestodb" } =
@@ -26,6 +27,7 @@ app.use((req, res, next) => {
 
   next();
 });
+app.use(router);
 app.use(routerUser);
 app.use(routerCard);
 
