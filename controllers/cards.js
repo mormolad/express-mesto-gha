@@ -23,10 +23,9 @@ const deleteCard = (req, res) => {
       return res.status(200).send({ message: card });
     })
     .catch((err) => {
-      console.log(err);
-      return res
-        .status(errorServer.code)
-        .send({ message: errorServer.message });
+      err.valueType != "ObjectId"
+        ? res.status(noValid.code).send({ message: noValid.message })
+        : res.status(errorServer.code).send({ message: errorServer.message });
     });
 };
 
