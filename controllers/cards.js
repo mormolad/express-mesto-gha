@@ -6,20 +6,27 @@ const getCards = (req, res) => {
     .then((cards) => {
       return res.status(200).send(cards);
     })
-    .catch((err) => res.status(500).send("Server Error"));
+    .catch((err) => {
+      console.log(err);
+      return res
+        .status(errorServer.code)
+        .send({ message: errorServer.message });
+    });
 };
 
 const deleteCard = (req, res) => {
-  const { cardId } = req.params;
-  return CardModel.findByIdAndRemove(cardId)
+  return CardModel.findByIdAndRemove(req.params.cardId)
     .then((card) => {
       if (!card) {
-        return res.status(404).send({ message: "Card not found" });
+        return res.status(noFind.code).send({ message: noFind.message });
       }
-      return res.status(200).send(card);
+      return res.status(200).send({ message: card });
     })
     .catch((err) => {
-      res.status(errorServer.code).send(errorServer.message);
+      console.log(err);
+      return res
+        .status(errorServer.code)
+        .send({ message: errorServer.message });
     });
 };
 
@@ -57,15 +64,12 @@ const deleteLike = (req, res) => {
   )
     .then((card) => {
       if (card) {
-        console.log(card, "code=200");
         return res.status(200).send({ message: card.likes });
       } else {
-        console.log(card, noFind.code);
         return res.status(noFind.code).send({ message: noFind.message });
       }
     })
     .catch((err) => {
-      console.log(err.valueType);
       err.valueType != "ObjectId"
         ? res.status(noValid.code).send({ message: noValid.message })
         : res.status(errorServer.code).send({ message: errorServer.message });
