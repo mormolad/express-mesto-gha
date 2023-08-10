@@ -38,17 +38,8 @@ const createCard = (req, res) => {
     .catch((err) => {
       console.log(err);
       if (err.name === "ValidationError") {
-        return res.status(400).send({
-          message: `${Object.values(err.errors)
-            .map((err) => err.message)
-            .join(", ")}`,
-        });
-      }
-      if (err.name === "CastError") {
-        return res.status(400).send({
-          message: `${Object.values(err.errors)
-            .map((err) => err.message)
-            .join(", ")}`,
+        return res.status(noValid.code).send({
+          message: noValid.message,
         });
       }
       return res.status(errorServer.code).send(errorServer.message);

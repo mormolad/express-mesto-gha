@@ -1,4 +1,4 @@
-const { noValid, noFind, errorServer } = require("../errors");
+const { noFind } = require("../errors");
 const dotenv = require("dotenv").config();
 
 const getPage = (req, res) => {
