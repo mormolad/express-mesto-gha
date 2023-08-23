@@ -1,27 +1,44 @@
 const mongoose = require("mongoose");
+var validator = require("validator");
 
-// напишите код здесь
 const userSchema = new mongoose.Schema({
-  name: { type: String, required: true, minlength: 2, maxlength: 30 },
+  name: { type: String, default: "Жак-Ив Кусто", minlength: 2, maxlength: 30 },
   about: {
     type: String,
-    required: true,
+    default: "Исследователь",
     minlength: 2,
     maxlength: 30,
   },
   avatar: {
     type: String,
+    default:
+      "https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png",
+    validate: {
+      validator(url) {
+        return validator.isURL(url); // если не url, вернётся false
+      },
+      message: "введите адрес аватара", // когда validator вернёт false, будет использовано это сообщение
+    },
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    validate: {
+      validator(email) {
+        return validator.isEmail(email); // если не email, вернётся false
+      },
+      message: "введите email", // когда validator вернёт false, будет использовано это сообщение
+    },
+  },
+  password: {
+    type: String,
     required: true,
     validate: {
-      // опишем свойство validate
-      validator(value) {
-        // validator - функция проверки данных. v - значение свойства age
-        const regex =
-          /^http[s]?:\/\/[a-zA-Z\d.-]+[:]?[\d]{0,4}[\/]?[a-zA-Z\d\/-]+/;
-        const result = regex.test(value);
-        return result; // если возраст меньше 18, вернётся false
+      validator(pass) {
+        return validator.isStrongPassword(pass); // если пороль простой, вернётся false
       },
-      message: "Вам должно быть больше 18 лет!", // когда validator вернёт false, будет использовано это сообщение
+      message: "пороль не соответствует требованием безопасности", // когда validator вернёт false, будет использовано это сообщение
     },
   },
 });

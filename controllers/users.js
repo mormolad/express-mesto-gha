@@ -1,6 +1,8 @@
 const UserModel = require("../models/user");
 const { noValid, noFind, errorServer } = require("../errors");
 const dotenv = require("dotenv").config();
+const bcrypt = require("bcryptjs");
+var jwt = require("jsonwebtoken");
 
 const getUsers = (req, res) => {
   return UserModel.find()
@@ -34,15 +36,28 @@ const getUserById = (req, res) => {
 };
 
 const createUser = (req, res) => {
-  const { name, about, avatar } = req.body;
-  return UserModel.create({ name, about, avatar })
-    .then((user) => {
-      return res.status(201).send(user);
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res
+      .status(400)
+      .send({ message: "Email или парль не могут быть пустыми" });
+  }
+  bcrypt
+    .hash(password, 10)
+    .then((hash) => {
+      return UserModel.create({ email, password: hash });
+    })
+    .then(({ _id }) => {
+      return res.status(201).send(_id);
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
         return res.status(noValid.code).send({
           message: noValid.message,
+        });
+      } else if (err.code === 11000) {
+        return res.status(409).send({
+          message: "Такой пользователь существует",
         });
       }
       return res.status(errorServer.code).send(errorServer.message);
@@ -102,10 +117,45 @@ const updateAvatar = (req, res) => {
     });
 };
 
+const login = (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res
+      .status(400)
+      .send({ message: "Email или парль не могут быть пустыми" });
+  }
+
+  UserModel.findOne({ email })
+    .then((user) => {
+      if (!user) {
+        return res.status(403).send({
+          message: "Такого пользователя не существует",
+        });
+      }
+      console.log(password, user);
+      bcrypt.compare(password, user.password, (err, result) => {
+        console.log(err);
+        result
+          ? res.status(200).send({
+              message: jwt.sign({ data: email }, "secret", {
+                expiresIn: "7d",
+              }),
+            })
+          : res.status(noValid.code).send({
+              message: "Пароль не верный",
+            });
+      });
+    })
+    .catch((err) => {
+      res.status(401).send({ message: err.message });
+    });
+};
+
 module.exports = {
   getUsers,
   getUserById,
   createUser,
   updateProfile,
   updateAvatar,
+  login,
 };
