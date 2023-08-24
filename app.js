@@ -3,11 +3,14 @@ const mongoose = require("mongoose");
 const path = require("path");
 const routerUser = require("./routers/users");
 const routerCard = require("./routers/card");
+const routerAuth = require("./routers/auth");
 const router = require("./routers/index");
 const bodyParser = require("body-parser");
 const dotenv = require("dotenv").config();
+const auth = require("./middlewares/auth");
 const { PORT = 3000, MONGODB_URL = "mongodb://127.0.0.1:27017/mestodb" } =
   process.env;
+
 // подключаемся к серверу mongo
 mongoose
   .connect(MONGODB_URL, {
@@ -20,14 +23,8 @@ mongoose
 const app = express();
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")));
-app.use((req, res, next) => {
-  req.user = {
-    _id: "64d3114194dcd8b1b443a367",
-  };
-
-  next();
-});
-
+app.use(routerAuth);
+app.use(auth);
 app.use(routerUser);
 app.use(routerCard);
 app.use(router);
