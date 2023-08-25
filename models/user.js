@@ -34,6 +34,7 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
+    select: false,
     validate: {
       validator(pass) {
         return validator.isStrongPassword(pass); // если пороль простой, вернётся false

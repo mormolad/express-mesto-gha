@@ -10,7 +10,9 @@ const login = (req, res) => {
   }
 
   UserModel.findOne({ email })
+    .select("+password")
     .then((user) => {
+      console.log(user);
       if (!user) {
         return res.status(403).send({
           message: "Такого пользователя не существует",

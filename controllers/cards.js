@@ -15,7 +15,9 @@ const getCards = (req, res) => {
 };
 
 const deleteCard = (req, res) => {
-  return CardModel.findByIdAndRemove(req.params.cardId)
+  return CardModel.findOneAndRemove({
+    $and: [{ _id: req.params.cardId }, { owner: req.user._id }],
+  })
     .then((card) => {
       if (!card) {
         return res.status(noFind.code).send({ message: noFind.message });

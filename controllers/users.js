@@ -15,7 +15,7 @@ const getCerrentUsers = (req, res) => {
 };
 
 const getUserById = (req, res) => {
-  return getUser(req.params, res);
+  return getUser(req.params.userId, res);
 };
 
 const updateProfile = (req, res) => {
