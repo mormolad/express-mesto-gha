@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const { getJWT } = require("../utils/jwt");
 const UserModel = require("../models/user");
+
 const login = (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {

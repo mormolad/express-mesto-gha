@@ -72,7 +72,6 @@ const updateAvatar = (req, res) => {
 };
 
 const getUser = (userId, res) => {
-  console.log(userId);
   return UserModel.findById(userId)
     .then((user) => {
       if (!user) {
