@@ -1,16 +1,17 @@
 const UserModel = require("../models/user");
-const { noValid, noFind, errorServer } = require("../errors");
-const user = require("../models/user");
-
+const { createErr, sendErr } = require("../utils/handlerErrors");
+const { noFindUser } = require("../errors");
 const getUsers = (req, res) => {
   return UserModel.find()
     .then((users) => {
       return res.status(200).send(users);
     })
-    .catch((err) => res.status(500).send({ message: err }));
+    .catch((err) => {
+      return sendErr(err, res);
+    });
 };
 
-const getCerrentUsers = (req, res) => {
+const getCurrentUsers = (req, res) => {
   return getUser(req.user._id, res);
 };
 
@@ -31,18 +32,12 @@ const updateProfile = (req, res) => {
       if (user) {
         return res.status(200).send({ message: user });
       } else {
-        return res.status(noFind.code).send({ message: noFind.message });
+        createErr(noFindUser.code, noFindUser.message);
       }
     })
     .catch((err) => {
       console.log(err);
-      if (err.name === "ValidationError") {
-        return res.status(noValid.code).send({
-          message: noValid.message,
-        });
-      } else {
-        return res.status(errorServer.code).send(errorServer.message);
-      }
+      sendErr(err, res);
     });
 };
 const updateAvatar = (req, res) => {
@@ -55,19 +50,12 @@ const updateAvatar = (req, res) => {
   )
     .then((user) => {
       if (!user) {
-        return res.status(noFind.code).send({ message: noFind.message });
+        createErr(noFindUser.code, noFindUser.message);
       }
       return res.status(200).send(user);
     })
     .catch((err) => {
-      console.log(err);
-      if (err.name === "ValidationError") {
-        return res.status(noValid.code).send({
-          message: noValid.message,
-        });
-      } else {
-        return res.status(errorServer.code).send(errorServer.message);
-      }
+      sendErr(err, res);
     });
 };
 
@@ -75,19 +63,12 @@ const getUser = (userId, res) => {
   return UserModel.findById(userId)
     .then((user) => {
       if (!user) {
-        return res.status(404).send({ message: "не найдено" });
+        createErr(noFindUser.code, noFindUser.message);
       }
       return res.status(200).send({ message: user });
     })
     .catch((err) => {
-      console.log(err.name);
-      if (err.name === "CastError") {
-        res.status(noValid.code).send({ message: noValid.message });
-      } else if (err.value === "6") {
-        res.status(noFind.code).send({ message: noFind.message });
-      } else {
-        res.status(errorServer.code).send({ message: err });
-      }
+      sendErr(err, res);
     });
 };
 
@@ -96,5 +77,5 @@ module.exports = {
   getUserById,
   updateProfile,
   updateAvatar,
-  getCerrentUsers,
+  getCurrentUsers,
 };

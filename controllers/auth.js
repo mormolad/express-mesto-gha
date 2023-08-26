@@ -1,46 +1,38 @@
 const bcrypt = require("bcryptjs");
 const { getJWT } = require("../utils/jwt");
 const UserModel = require("../models/user");
+const { createErr, sendErr } = require("../utils/handlerErrors");
+const { emptyField, errLogin } = require("../errors");
 
 const login = (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    return res
-      .status(400)
-      .send({ message: "Email или парль не могут быть пустыми" });
+    createErr(emptyField.code, emptyField.message);
   }
-
   UserModel.findOne({ email })
     .select("+password")
     .then((user) => {
-      console.log(user);
       if (!user) {
-        return res.status(403).send({
-          message: "Такого пользователя не существует",
-        });
+        createErr(errLogin.code, errLogin.message);
       }
       bcrypt.compare(password, user.password, function (err, result) {
         if (err) {
-          console.log(err);
+          createErr(410, err); // debug
         }
         return result
           ? res.status(200).send({ message: getJWT(user._id) })
-          : res.status(401).send({
-              message: "Пароль не верный",
-            });
+          : createErr(errLogin.code, errLogin.message);
       });
     })
     .catch((err) => {
-      return res.status(401).send({ message: err.message });
+      sendErr(err, res);
     });
 };
 
 const createUser = (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    return res
-      .status(400)
-      .send({ message: "Email или парль не могут быть пустыми" });
+    createErr(errLogin.code, errLogin.message);
   }
   bcrypt
     .hash(password, 10)
@@ -51,17 +43,7 @@ const createUser = (req, res) => {
       return res.status(201).send(_id);
     })
     .catch((err) => {
-      console.log(err);
-      if (err.name === "ValidationError") {
-        return res.status(noValid.code).send({
-          message: noValid.message,
-        });
-      } else if (err.code === 11000) {
-        return res.status(409).send({
-          message: "Такой пользователь существует",
-        });
-      }
-      return res.status(500).send({ message: "ошибка сервера" });
+      sendErr(err, res);
     });
 };
 

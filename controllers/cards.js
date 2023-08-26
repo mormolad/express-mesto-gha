@@ -1,17 +1,13 @@
 const CardModel = require("../models/card");
-const { noValid, noFind, errorServer } = require("../errors");
+const { createErr, sendErr } = require("../utils/handlerErrors");
+const { noFindCard } = require("../errors");
 
 const getCards = (req, res) => {
   return CardModel.find()
     .then((cards) => {
       return res.status(200).send(cards);
     })
-    .catch((err) => {
-      console.log(err);
-      return res
-        .status(errorServer.code)
-        .send({ message: errorServer.message });
-    });
+    .catch((err) => send(err, res));
 };
 
 const deleteCard = (req, res) => {
@@ -20,15 +16,11 @@ const deleteCard = (req, res) => {
   })
     .then((card) => {
       if (!card) {
-        return res.status(noFind.code).send({ message: noFind.message });
+        createErr(noFindCard.code, noFindCard.message);
       }
       return res.status(200).send({ message: card });
     })
-    .catch((err) => {
-      err.valueType != "ObjectId"
-        ? res.status(noValid.code).send({ message: noValid.message })
-        : res.status(errorServer.code).send({ message: errorServer.message });
-    });
+    .catch((err) => sendErr(err, res));
 };
 
 const createCard = (req, res) => {
@@ -37,15 +29,7 @@ const createCard = (req, res) => {
     .then((card) => {
       return res.status(201).send(card);
     })
-    .catch((err) => {
-      console.log(err);
-      if (err.name === "ValidationError") {
-        return res.status(noValid.code).send({
-          message: noValid.message,
-        });
-      }
-      return res.status(errorServer.code).send(errorServer.message);
-    });
+    .catch((err) => sendErr(err, res));
 };
 
 const deleteLike = (req, res) => {
@@ -58,14 +42,10 @@ const deleteLike = (req, res) => {
       if (card) {
         return res.status(200).send({ message: card.likes });
       } else {
-        return res.status(noFind.code).send({ message: noFind.message });
+        createErr(noFindCard.code, noFindCard.message);
       }
     })
-    .catch((err) => {
-      err.valueType != "ObjectId"
-        ? res.status(noValid.code).send({ message: noValid.message })
-        : res.status(errorServer.code).send({ message: errorServer.message });
-    });
+    .catch((err) => sendErr(err, res));
 };
 
 const putLike = (req, res) => {
@@ -76,16 +56,11 @@ const putLike = (req, res) => {
   )
     .then((card) => {
       if (!card) {
-        return res.status(noFind.code).send({ message: noFind.message });
+        return createErr(noFindCard.code, noFindCard.message);
       }
       return res.status(200).send({ message: card.likes });
     })
-    .catch((err) => {
-      console.log(err);
-      err.valueType != "ObjectId"
-        ? res.status(noValid.code).send({ message: noValid.message })
-        : res.status(errorServer.code).send({ message: errorServer.message });
-    });
+    .catch((err) => sendErr(err, res));
 };
 
 module.exports = {

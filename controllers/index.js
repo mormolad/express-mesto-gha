@@ -1,8 +1,8 @@
-const { noFind } = require("../errors");
+const { noFindRout } = require("../errors");
 const dotenv = require("dotenv").config();
-
+const { sendErr } = require("../utils/handlerErrors");
 const getPage = (req, res) => {
-  return res.status(noFind.code).send({ message: noFind.message });
+  sendErr(noFindRout.code, noFindRout.message);
 };
 
 module.exports = {

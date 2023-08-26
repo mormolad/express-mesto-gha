@@ -1,16 +1,46 @@
 module.exports = {
   noValid: {
     code: 400,
-    message: "Переданы некорректные данные в методы создания",
-  },
-  noFind: {
-    code: 404,
-    message:
-      "Карточка или пользователь не найден или был запрошен несуществующий роут",
+    message: "Переданы некорректные данные",
   },
 
-  errorServer: {
+  emptyField: {
+    code: 400,
+    message: "Email или парль не могут быть пустыми",
+  },
+
+  noAuth: {
+    code: 401,
+    message: "Необходима авторизация",
+  },
+
+  errLogin: {
+    code: 403,
+    message: "Пароль или email не верные",
+  },
+
+  noFindUser: {
+    code: 404,
+    message: "Пользователь не найден",
+  },
+
+  noFindCard: {
+    code: 404,
+    message: "Место не найден",
+  },
+
+  noFindRout: {
+    code: 404,
+    message: "Страница не найдена",
+  },
+
+  noValidEmail: {
+    code: 409,
+    message: "Пользователь с таким email уже зарегистрирован",
+  },
+
+  errServer: {
     code: 500,
-    message: "На сервере произошла ошибка».",
+    message: "На сервере произошла ошибка",
   },
 };
