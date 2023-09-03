@@ -28,6 +28,12 @@ app.use(auth);
 app.use(routerUser);
 app.use(routerCard);
 app.use(router);
+app.use(sendError);
 app.listen(PORT, () => {
   console.log(`server start, listen port: ${PORT}`);
 });
+
+function sendError(err, req, res, next) {
+  console.log(err);
+  res.status(err.statusCode).send({ message: err.message });
+}

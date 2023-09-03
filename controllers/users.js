@@ -1,25 +1,23 @@
 const UserModel = require("../models/user");
-const { createErr, sendErr } = require("../utils/handlerErrors");
+const { CustomeError } = require("../utils/handlerErrors");
 const { noFindUser } = require("../errors");
-const getUsers = (req, res) => {
+const getUsers = (req, res, next) => {
   return UserModel.find()
     .then((users) => {
-      return res.status(200).send(users);
+      return res.status(200).send({ message: users });
     })
-    .catch((err) => {
-      return sendErr(err, res);
-    });
+    .catch(next);
 };
 
-const getCurrentUsers = (req, res) => {
+const getCurrentUser = (req, res, next) => {
   return getUser(req.user._id, res);
 };
 
-const getUserById = (req, res) => {
+const getUserById = (req, res, next) => {
   return getUser(req.params.userId, res);
 };
 
-const updateProfile = (req, res) => {
+const updateProfile = (req, res, next) => {
   return UserModel.findByIdAndUpdate(
     req.user._id,
     {
@@ -32,15 +30,12 @@ const updateProfile = (req, res) => {
       if (user) {
         return res.status(200).send({ message: user });
       } else {
-        createErr(noFindUser.code, noFindUser.message);
+        throw new CustomeError(noFindUser.code, noFindUser.message);
       }
     })
-    .catch((err) => {
-      console.log(err);
-      sendErr(err, res);
-    });
+    .catch(next);
 };
-const updateAvatar = (req, res) => {
+const updateAvatar = (req, res, next) => {
   return UserModel.findByIdAndUpdate(
     req.user._id,
     {
@@ -50,26 +45,23 @@ const updateAvatar = (req, res) => {
   )
     .then((user) => {
       if (!user) {
-        createErr(noFindUser.code, noFindUser.message);
-      }
-      return res.status(200).send(user);
-    })
-    .catch((err) => {
-      sendErr(err, res);
-    });
-};
-
-const getUser = (userId, res) => {
-  return UserModel.findById(userId)
-    .then((user) => {
-      if (!user) {
-        createErr(noFindUser.code, noFindUser.message);
+        throw new CustomeError(noFindUser.code, noFindUser.message);
       }
       return res.status(200).send({ message: user });
     })
-    .catch((err) => {
-      sendErr(err, res);
-    });
+    .catch(next);
+};
+
+const getUser = (userId, res, next) => {
+  return UserModel.findById(userId)
+    .then((user) => {
+      console.log(noFindUser.code, noFindUser.message);
+      if (!user) {
+        throw new CustomeError(noFindUser.code, noFindUser.message);
+      }
+      return res.status(200).send({ message: user });
+    })
+    .catch(next);
 };
 
 module.exports = {
@@ -77,5 +69,5 @@ module.exports = {
   getUserById,
   updateProfile,
   updateAvatar,
-  getCurrentUsers,
+  getCurrentUser,
 };

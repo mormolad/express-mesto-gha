@@ -1,38 +1,41 @@
 const CardModel = require("../models/card");
-const { createErr, sendErr } = require("../utils/handlerErrors");
+const { CustomeError } = require("../utils/handlerErrors");
 const { noFindCard } = require("../errors");
 
-const getCards = (req, res) => {
+const getCards = (req, res, next) => {
   return CardModel.find()
     .then((cards) => {
-      return res.status(200).send(cards);
+      return res.status(200).send({ message: cards });
     })
-    .catch((err) => send(err, res));
+    .catch(next);
 };
 
-const deleteCard = (req, res) => {
+const deleteCard = (req, res, next) => {
   return CardModel.findOneAndRemove({
     $and: [{ _id: req.params.cardId }, { owner: req.user._id }],
   })
     .then((card) => {
       if (!card) {
-        createErr(noFindCard.code, noFindCard.message);
+        throw new CustomeError(noFindCard.code, noFindCard.message);
       }
       return res.status(200).send({ message: card });
     })
-    .catch((err) => sendErr(err, res));
+    .catch(next);
 };
 
-const createCard = (req, res) => {
+const createCard = (req, res, next) => {
   const { name, link } = req.body;
   return CardModel.create({ name, link, owner: req.user._id })
     .then((card) => {
-      return res.status(201).send(card);
+      if (!card) {
+        throw new CustomeError(noFindCard.code, noFindCard.message);
+      }
+      return res.status(201).send({ message: card });
     })
-    .catch((err) => sendErr(err, res));
+    .catch(next);
 };
 
-const deleteLike = (req, res) => {
+const deleteLike = (req, res, next) => {
   return CardModel.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } }, // убрать _id из массива
@@ -42,13 +45,13 @@ const deleteLike = (req, res) => {
       if (card) {
         return res.status(200).send({ message: card.likes });
       } else {
-        createErr(noFindCard.code, noFindCard.message);
+        throw new CustomeError(noFindCard.code, noFindCard.message);
       }
     })
-    .catch((err) => sendErr(err, res));
+    .catch(next);
 };
 
-const putLike = (req, res) => {
+const putLike = (req, res, next) => {
   return CardModel.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
@@ -56,11 +59,11 @@ const putLike = (req, res) => {
   )
     .then((card) => {
       if (!card) {
-        return createErr(noFindCard.code, noFindCard.message);
+        throw new CustomeError(noFindCard.code, noFindCard.message);
       }
       return res.status(200).send({ message: card.likes });
     })
-    .catch((err) => sendErr(err, res));
+    .catch(next);
 };
 
 module.exports = {

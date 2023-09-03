@@ -1,38 +1,41 @@
 const bcrypt = require("bcryptjs");
 const { getJWT } = require("../utils/jwt");
 const UserModel = require("../models/user");
-const { createErr, sendErr } = require("../utils/handlerErrors");
+const { CustomeError } = require("../utils/handlerErrors");
 const { emptyField, errLogin } = require("../errors");
 
-const login = (req, res) => {
+const login = (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    createErr(emptyField.code, emptyField.message);
+    throw new CustomeError(emptyField.code, emptyField.message);
   }
   UserModel.findOne({ email })
     .select("+password")
     .then((user) => {
       if (!user) {
-        createErr(errLogin.code, errLogin.message);
+        throw new CustomeError(errLogin.code, errLogin.message);
       }
       bcrypt.compare(password, user.password, function (err, result) {
         if (err) {
-          createErr(410, err); // debug
+          console.log("err login", err);
+          throw new CustomeError(errLogin.code, errLogin.message);
         }
-        return result
-          ? res.status(200).send({ message: getJWT(user._id) })
-          : createErr(errLogin.code, errLogin.message);
+
+        if (!result) {
+          console.log("result mast true", result);
+          throw new CustomeError(errLogin.code, errLogin.message);
+        }
+        console.log(getJWT(user._id));
+        return res.status(200).send({ message: getJWT(user._id) });
       });
     })
-    .catch((err) => {
-      sendErr(err, res);
-    });
+    .catch(next);
 };
 
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    createErr(errLogin.code, errLogin.message);
+    throw new CustomeError(errLogin.code, errLogin.message);
   }
   bcrypt
     .hash(password, 10)
@@ -42,9 +45,7 @@ const createUser = (req, res) => {
     .then((_id) => {
       return res.status(201).send(_id);
     })
-    .catch((err) => {
-      sendErr(err, res);
-    });
+    .catch(next);
 };
 
 module.exports = {

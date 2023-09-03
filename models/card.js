@@ -15,7 +15,7 @@ const cardSchema = new mongoose.Schema({
         const result = regex.test(value);
         return result; // если возраст меньше 18, вернётся false
       },
-      message: "Вам должно быть больше 18 лет!", // когда validator вернёт false, будет использовано это сообщение
+      message: "Введите коректный адрес фото", // когда validator вернёт false, будет использовано это сообщение
     },
   },
   owner: { type: String, required: true },

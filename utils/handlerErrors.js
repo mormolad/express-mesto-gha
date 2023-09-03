@@ -1,33 +1,39 @@
-const errStatus = require("../errors");
+const errDate = require("../errors");
 
-const createErr = (statusCode, message) => {
-  throw new Error(JSON.stringify({ code: statusCode, message }));
-};
+class CustomeError extends Error {
+  constructor(statusCode, message) {
+    super(message);
+    this.statusCode = statusCode;
+  }
+}
 
 const sendErr = (err, res) => {
-  console.log(err.code);
-  if (typeof err.message === "string") {
-    return res
-      .status(JSON.parse(err.message).code)
-      .send({ message: JSON.parse(err.message).message });
+  console.log("блок поиска ошибок, код ошибки = ", err, "/n конец ошибки");
+
+  if (err.statusCode) {
+    return res.status(err.statusCode).send({ message: err.message });
   } else if (err.name === "CastError") {
     return res.status(err.code).send({
       message: "заглушка, что то вроде не валидно, но надо проверить",
     });
   } else if (err.code) {
-    return res.status(err.code).send({ message: err.message.message });
+    return res
+      .status(errDate.noValid.code)
+      .send({ message: err.message.message });
   } else if (err.value === "6") {
-    res.status(err.code).send({ message: "заглушка, что то с валуе 6" });
+    res
+      .status(errDate.noValid.code)
+      .send({ message: "заглушка, что то с валуе 6" });
   } else if (err.name === "ValidationError") {
     res
-      .status(noValid.code)
+      .status(errDate.noValid.code)
       .send({ message: "заглушка, что то не завалидировалось" });
   } else {
-    res.status(errorServer.code).send({ message: err });
+    res.status(errDate.errorServer.code).send({ message: err });
   }
 };
 
 module.exports = {
-  createErr,
+  CustomeError,
   sendErr,
 };
