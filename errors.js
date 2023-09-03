@@ -26,7 +26,7 @@ module.exports = {
 
   noFindCard: {
     code: 404,
-    message: "Место не найден",
+    message: "Карточка мета не найдена",
   },
 
   noFindRout: {
