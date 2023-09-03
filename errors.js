@@ -15,7 +15,7 @@ module.exports = {
   },
 
   errLogin: {
-    code: 403,
+    code: 401,
     message: "Пароль или email не верные",
   },
 
