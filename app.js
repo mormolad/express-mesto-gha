@@ -8,6 +8,7 @@ const router = require("./routers/index");
 const bodyParser = require("body-parser");
 const dotenv = require("dotenv").config();
 const auth = require("./middlewares/auth");
+const { errors } = require("celebrate");
 const { PORT = 3000, MONGODB_URL = "mongodb://127.0.0.1:27017/mestodb" } =
   process.env;
 
@@ -28,6 +29,7 @@ app.use(auth);
 app.use(routerUser);
 app.use(routerCard);
 app.use(router);
+app.use(errors());
 app.use(sendError);
 app.listen(PORT, () => {
   console.log(`server start, listen port: ${PORT}`);
