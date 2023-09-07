@@ -40,7 +40,7 @@ const createUser = (req, res, next) => {
   bcrypt
     .hash(password, 10)
     .then((hash) => {
-      return UserModel.create({ email, password: hash });
+      return UserModel.create({ email, password: hash }, { new: true });
     })
     .then((_id) => {
       return res.status(201).send(_id);

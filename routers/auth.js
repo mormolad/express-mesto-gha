@@ -14,11 +14,9 @@ routerAuth.post(
       password: Joi.string().required().min(2),
       about: Joi.string().min(2).max(30),
       name: Joi.string().min(2).max(30),
-      avatar: Joi.string()
-        .required()
-        .pattern(
-          /^((ftp|http|https):\/\/)?(www\.)?([A-Za-zА-Яа-я0-9]{1}[A-Za-zА-Яа-я0-9\-]*\.?)*\.{1}[A-Za-zА-Яа-я0-9-]{2,8}(\/([\w#!:.?+=&%@!\-\/])*)?/
-        ),
+      avatar: Joi.string().pattern(
+        /^((ftp|http|https):\/\/)?(www\.)?([A-Za-zА-Яа-я0-9]{1}[A-Za-zА-Яа-я0-9\-]*\.?)*\.{1}[A-Za-zА-Яа-я0-9-]{2,8}(\/([\w#!:.?+=&%@!\-\/])*)?/
+      ),
     }),
   }),
   createUser

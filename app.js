@@ -24,6 +24,7 @@ mongoose
 const app = express();
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")));
+
 app.use(routerAuth);
 app.use(auth);
 app.use(routerUser);
