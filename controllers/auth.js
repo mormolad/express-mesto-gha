@@ -38,15 +38,13 @@ const createUser = (req, res, next) => {
   if (!email || !password) {
     throw new CustomeError(errLogin.code, errLogin.message);
   }
-  bcrypt
-    .hash(password, 10)
-    .then((hash) => {
-      return UserModel.create({ email, password: hash });
-    })
-    .then((_id) => {
-      return res.status(201).send(_id);
-    })
-    .catch(next);
+  bcrypt.hash(password, 10).then((hash) => {
+    UserModel.create({ email, password: hash })
+      .then((_id) => {
+        return res.status(201).send(_id);
+      })
+      .catch(next);
+  });
 };
 
 module.exports = {
