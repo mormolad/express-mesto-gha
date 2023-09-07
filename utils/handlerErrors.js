@@ -8,7 +8,7 @@ class CustomeError extends Error {
 }
 
 const sendErr = (err, res) => {
-  console.log("блок поиска ошибок, код ошибки = ", err, "/n конец ошибки");
+  // console.log("блок поиска ошибок, код ошибки = ", err, "/n конец ошибки");
 
   if (err.statusCode) {
     return res.status(err.statusCode).send({ message: err.message });
@@ -17,19 +17,16 @@ const sendErr = (err, res) => {
       message: "заглушка, что то вроде не валидно, но надо проверить",
     });
   } else if (err.code) {
+    console.log({ message: "пользователь с таким емайлом существует" });
     return res
-      .status(errDate.noValid.code)
-      .send({ message: err.message.message });
+      .status(409)
+      .send({ message: "пользователь с таким емайлом существует" });
   } else if (err.value === "6") {
-    res
-      .status(errDate.noValid.code)
-      .send({ message: "заглушка, что то с валуе 6" });
+    res.status(403).send({ message: "заглушка, что то с валуе 6" });
   } else if (err.name === "ValidationError") {
-    res
-      .status(errDate.noValid.code)
-      .send({ message: "заглушка, что то не завалидировалось" });
+    res.status(403).send({ message: "заглушка, что то не завалидировалось" });
   } else {
-    res.status(errDate.errorServer.code).send({ message: err });
+    res.status(500).send({ message: err });
   }
 };
 

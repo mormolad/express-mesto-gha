@@ -21,6 +21,7 @@ routerAuth.post(
   }),
   createUser
 );
+
 routerAuth.post(
   "/signin",
   celebrate({
