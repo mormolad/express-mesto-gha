@@ -41,9 +41,7 @@ const createUser = (req, res, next) => {
     UserModel.create({ email, password: hash })
       .then((user) => {
         const { email, name, about, avatar } = user;
-        return res
-          .status(201)
-          .send({ message: { email, name, about, avatar } });
+        return res.status(201).send({ email, name, about, avatar });
       })
       .catch(next);
   });
