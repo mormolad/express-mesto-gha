@@ -55,7 +55,6 @@ const updateAvatar = (req, res, next) => {
 const getUser = (userId, res, next) => {
   return UserModel.findById(userId)
     .then((user) => {
-      console.log(noFindUser.code, noFindUser.message);
       if (!user) {
         throw new CustomeError(noFindUser.code, noFindUser.message);
       }

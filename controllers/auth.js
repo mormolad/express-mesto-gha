@@ -33,7 +33,6 @@ const login = (req, res, next) => {
 };
 
 const createUser = (req, res, next) => {
-  console.log("wtf");
   const { email, password } = req.body;
   if (!email || !password) {
     throw new CustomeError(errLogin.code, errLogin.message);
@@ -41,8 +40,10 @@ const createUser = (req, res, next) => {
   bcrypt.hash(password, 10).then((hash) => {
     UserModel.create({ email, password: hash })
       .then((user) => {
-        console.log(user._id);
-        return res.status(201).send({ message: user._id });
+        const { email, name, about, avatar } = user;
+        return res
+          .status(201)
+          .send({ message: { email, name, about, avatar } });
       })
       .catch(next);
   });
