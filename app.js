@@ -52,6 +52,7 @@ function sendError(err, req, res, next) {
   } else if (err.value === "6") {
     res.status(403).send({ message: "заглушка, что то с валуе 6" });
   } else if (err.name === "ValidationError") {
+    console.log(err);
     res.status(403).send({ message: "заглушка, что то не завалидировалось" });
   } else {
     res.status(500).send({ message: err });

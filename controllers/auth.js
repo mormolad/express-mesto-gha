@@ -33,15 +33,16 @@ const login = (req, res, next) => {
 };
 
 const createUser = (req, res, next) => {
-  const { email, password } = req.body;
+  const { email, password, name, about, avatar } = req.body;
   if (!email || !password) {
     throw new CustomeError(errLogin.code, errLogin.message);
   }
   bcrypt.hash(password, 10).then((hash) => {
-    UserModel.create({ email, password: hash })
+    UserModel.create({ email, password: hash, name, about, avatar })
       .then((user) => {
-        const { email, name, about, avatar } = user;
-        return res.status(201).send({ email, name, about, avatar });
+        const userRes = user.toObject();
+        delete userRes.password;
+        return res.status(201).send({ userRes });
       })
       .catch(next);
   });
