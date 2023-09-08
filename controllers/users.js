@@ -56,7 +56,7 @@ const getUser = (userId, res, next) => {
   return UserModel.findById(userId)
     .then((user) => {
       if (!user) {
-        throw new CustomeError(noFindUser.code, noFindUser.message);
+        throw new CustomeError(404, "пользователь не найден");
       }
       return res.status(200).send({ message: user });
     })
