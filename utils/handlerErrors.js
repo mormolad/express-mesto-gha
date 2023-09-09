@@ -7,9 +7,8 @@ class CustomeError extends Error {
   }
 }
 
-const sendErr = (err, res) => {
-  // console.log("блок поиска ошибок, код ошибки = ", err, "/n конец ошибки");
-
+function sendError(err, req, res, next) {
+  console.log("блок поиска ошибок, код ошибки = ", err, "/n конец ошибки");
   if (err.statusCode) {
     return res.status(err.statusCode).send({ message: err.message });
   } else if (err.name === "CastError") {
@@ -17,20 +16,20 @@ const sendErr = (err, res) => {
       message: "заглушкggdfgfgsdfа, что то вроде не валидно, но надо проверить",
     });
   } else if (err.code) {
-    console.log({ message: "пользователь с таким емайлом существует" });
     return res
       .status(409)
       .send({ message: "пользователь с таким емайлом существует" });
   } else if (err.value === "6") {
     res.status(403).send({ message: "заглушка, что то с валуе 6" });
   } else if (err.name === "ValidationError") {
+    console.log(err);
     res.status(403).send({ message: "заглушка, что то не завалидировалось" });
   } else {
     res.status(500).send({ message: err });
   }
-};
+}
 
 module.exports = {
   CustomeError,
-  sendErr,
+  sendError,
 };
