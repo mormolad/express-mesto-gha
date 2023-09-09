@@ -14,7 +14,7 @@ const sendErr = (err, res) => {
     return res.status(err.statusCode).send({ message: err.message });
   } else if (err.name === "CastError") {
     return res.status(err.code).send({
-      message: "заглушка, что то вроде не валидно, но надо проверить",
+      message: "заглушкggdfgfgsdfа, что то вроде не валидно, но надо проверить",
     });
   } else if (err.code) {
     console.log({ message: "пользователь с таким емайлом существует" });
