@@ -11,14 +11,16 @@ const getCards = (req, res, next) => {
 };
 
 const deleteCard = (req, res, next) => {
-  return CardModel.findOneAndRemove({
-    $and: [{ _id: req.params.cardId }, { owner: req.user._id }],
-  })
+  return CardModel.findOneAndRemove({ _id: req.params.cardId })
     .then((card) => {
+      console.log(req.user);
       if (!card) {
         throw new CustomeError(noFindCard.code, noFindCard.message);
+      } else if (card.owner === req.user._id) {
+        return res.status(200).send({ message: card });
+      } else {
+        throw new CustomeError(403, "нельзя удалить чужую катру");
       }
-      return res.status(200).send({ message: card });
     })
     .catch(next);
 };
