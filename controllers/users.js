@@ -1,20 +1,14 @@
 const UserModel = require("../models/user");
 const { CustomeError } = require("../utils/handlerErrors");
 const { noFindUser } = require("../errors");
+const { celebrate, Joi } = require("celebrate");
+
 const getUsers = (req, res, next) => {
   return UserModel.find()
     .then((users) => {
       return res.status(200).send({ message: users });
     })
     .catch(next);
-};
-
-const getCurrentUser = (req, res, next) => {
-  return getUser(req.user._id, res);
-};
-
-const getUserById = (req, res, next) => {
-  return getUser(req.params.userId, res);
 };
 
 const updateProfile = (req, res, next) => {
@@ -52,7 +46,16 @@ const updateAvatar = (req, res, next) => {
     .catch(next);
 };
 
+const getCurrentUser = (req, res, next) => {
+  return getUser(req.user._id, res);
+};
+
+const getUserById = (req, res, next) => {
+  return getUser(req.params.userId, res);
+};
+
 const getUser = (userId, res, next) => {
+  console.log(userId);
   return UserModel.findById(userId)
     .then((user) => {
       if (!user) {

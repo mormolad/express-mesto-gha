@@ -17,15 +17,11 @@ const login = (req, res, next) => {
       }
       bcrypt.compare(password, user.password, function (err, result) {
         if (err) {
-          console.log("err login", err);
           throw new CustomeError(errLogin.code, errLogin.message);
         }
-
         if (!result) {
-          console.log("result mast true", result);
           throw new CustomeError(errLogin.code, errLogin.message);
         }
-        console.log(getJWT(user._id));
         return res.status(200).send({ message: getJWT(user._id) });
       });
     })
