@@ -32,6 +32,22 @@ routerCard.post(
   }),
   createCard
 ); // добавить карточку
-routerCard.put("/cards/:cardId/likes", putLike); //поставить лайк карточке
-routerCard.delete("/cards/:cardId/likes", deleteLike); // убрать лайк с карточки
+routerCard.put(
+  "/cards/:cardId/likes",
+  celebrate({
+    params: Joi.object().keys({
+      cardId: Joi.string().alphanum().length(24),
+    }),
+  }),
+  putLike
+); //поставить лайк карточке
+routerCard.delete(
+  "/cards/:cardId/likes",
+  celebrate({
+    params: Joi.object().keys({
+      cardId: Joi.string().alphanum().length(24),
+    }),
+  }),
+  deleteLike
+); // убрать лайк с карточки
 module.exports = routerCard;
