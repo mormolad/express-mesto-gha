@@ -9,7 +9,15 @@ const {
 } = require("../controllers/cards");
 
 routerCard.get("/cards", getCards); // отдать коллекцию карт
-routerCard.delete("/cards/:cardId", deleteCard); // удалить карточку
+routerCard.delete(
+  "/cards/:cardId",
+  celebrate({
+    params: Joi.object().keys({
+      userId: Joi.string().alphanum().length(24),
+    }),
+  }),
+  deleteCard
+); // удалить карточку
 routerCard.post(
   "/cards",
   celebrate({

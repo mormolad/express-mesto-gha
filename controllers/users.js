@@ -55,7 +55,6 @@ const getUserById = (req, res, next) => {
 };
 
 const getUser = (userId, res, next) => {
-  console.log(userId);
   return UserModel.findById(userId)
     .then((user) => {
       if (!user) {
