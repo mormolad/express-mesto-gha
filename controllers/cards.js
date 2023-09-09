@@ -52,7 +52,6 @@ const deleteLike = (req, res, next) => {
 };
 
 const putLike = (req, res, next) => {
-  console.log(req.params);
   return CardModel.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет

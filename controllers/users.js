@@ -47,17 +47,16 @@ const updateAvatar = (req, res, next) => {
 };
 
 const getCurrentUser = (req, res, next) => {
-  return getUser(req.user._id, res);
+  return getUser(req.user._id, res, next);
 };
 
 const getUserById = (req, res, next) => {
-  return getUser(req.params.userId, res);
+  return getUser(req.params.userId, res, next);
 };
 
 const getUser = (userId, res, next) => {
   return UserModel.findById(userId)
     .then((user) => {
-      console.log(user);
       if (!user) {
         throw new CustomeError(noFindUser.code, noFindUser.message);
       }
