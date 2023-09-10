@@ -17,7 +17,7 @@ const login = (req, res, next) => {
       }
       bcrypt.compare(password, user.password, function (err, result) {
         if (err) {
-          throw new CustomeError(errLogin.code, errLogin.message);
+          return next(new CustomeError(errLogin.code, errLogin.message));
         }
         if (!result) {
           throw new CustomeError(errLogin.code, errLogin.message);

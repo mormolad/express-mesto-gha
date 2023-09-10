@@ -13,17 +13,17 @@ function sendError(err, req, res, next) {
     return res.status(err.statusCode).send({ message: err.message });
   } else if (err.name === "CastError") {
     return res.status(err.code).send({
-      message: "заглушкggdfgfgsdfа, что то вроде не валидно, но надо проверить",
+      message: "переданные данные не валидны",
     });
-  } else if (err.code) {
+  } else if (err.code === 11000) {
     return res
       .status(409)
       .send({ message: "пользователь с таким емайлом существует" });
   } else if (err.value === "6") {
-    res.status(403).send({ message: "заглушка, что то с валуе 6" });
+    res.status(403).send({ message: "нет права доступа" });
   } else if (err.name === "ValidationError") {
     console.log(err);
-    res.status(403).send({ message: "заглушка, что то не завалидировалось" });
+    res.status(400).send({ message: "переданные данные не валидны" });
   } else {
     res.status(500).send({ message: err });
   }

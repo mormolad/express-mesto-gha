@@ -11,9 +11,8 @@ const getCards = (req, res, next) => {
 };
 
 const deleteCard = (req, res, next) => {
-  return CardModel.findOneAndRemove({ _id: req.params.cardId })
+  return CardModel.findById({ _id: req.params.cardId })
     .then((card) => {
-      console.log(req.user);
       if (!card) {
         throw new CustomeError(noFindCard.code, noFindCard.message);
       } else if (card.owner === req.user._id) {
