@@ -1,8 +1,10 @@
 const mongoose = require("mongoose");
-var validator = require("validator");
+const validator = require("validator");
 
 const userSchema = new mongoose.Schema({
-  name: { type: String, default: "Жак-Ив Кусто", minlength: 2, maxlength: 30 },
+  name: {
+    type: String, default: "Жак-Ив Кусто", minlength: 2, maxlength: 30,
+  },
   about: {
     type: String,
     default: "Исследователь",

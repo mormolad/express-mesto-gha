@@ -16,7 +16,7 @@ routerCard.delete(
       cardId: Joi.string().length(24).hex().required(),
     }),
   }),
-  deleteCard
+  deleteCard,
 ); // удалить карточку
 routerCard.post(
   "/cards",
@@ -26,11 +26,11 @@ routerCard.post(
       link: Joi.string()
         .required()
         .pattern(
-          /^((ftp|http|https):\/\/)?(www\.)?([A-Za-zА-Яа-я0-9]{1}[A-Za-zА-Яа-я0-9\-]*\.?)*\.{1}[A-Za-zА-Яа-я0-9-]{2,8}(\/([\w#!:.?+=&%@!\-\/])*)?/
+          /^((ftp|http|https):\/\/)?(www\.)?([A-Za-zА-Яа-я0-9]{1}[A-Za-zА-Яа-я0-9\-]*\.?)*\.{1}[A-Za-zА-Яа-я0-9-]{2,8}(\/([\w#!:.?+=&%@!\-\/])*)?/,
         ),
     }),
   }),
-  createCard
+  createCard,
 ); // добавить карточку
 routerCard.put(
   "/cards/:cardId/likes",
@@ -39,8 +39,8 @@ routerCard.put(
       cardId: Joi.string().length(24).hex().required(),
     }),
   }),
-  putLike
-); //поставить лайк карточке
+  putLike,
+); // поставить лайк карточке
 routerCard.delete(
   "/cards/:cardId/likes",
   celebrate({
@@ -48,6 +48,6 @@ routerCard.delete(
       cardId: Joi.string().length(24).hex().required(),
     }),
   }),
-  deleteLike
+  deleteLike,
 ); // убрать лайк с карточки
 module.exports = routerCard;

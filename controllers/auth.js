@@ -13,14 +13,14 @@ const login = (req, res, next) => {
     .select("+password")
     .then((user) => {
       if (!user) {
-        throw new CustomeError(errLogin.code, errLogin.message);
+        return next(new CustomeError(errLogin.code, errLogin.message));
       }
-      bcrypt.compare(password, user.password, function (err, result) {
+      bcrypt.compare(password, user.password, (err, result) => {
         if (err) {
           return next(new CustomeError(errLogin.code, errLogin.message));
         }
         if (!result) {
-          throw new CustomeError(errLogin.code, errLogin.message);
+          return next(new CustomeError(errLogin.code, errLogin.message));
         }
         return res.status(200).send({ message: getJWT(user._id) });
       });
@@ -29,12 +29,16 @@ const login = (req, res, next) => {
 };
 
 const createUser = (req, res, next) => {
-  const { email, password, name, about, avatar } = req.body;
+  const {
+    email, password, name, about, avatar,
+  } = req.body;
   if (!email || !password) {
     throw new CustomeError(errLogin.code, errLogin.message);
   }
   bcrypt.hash(password, 10).then((hash) => {
-    UserModel.create({ email, password: hash, name, about, avatar })
+    UserModel.create({
+      email, password: hash, name, about, avatar,
+    })
       .then((user) => {
         const userRes = user.toObject();
         delete userRes.password;

@@ -1,16 +1,17 @@
+const path = require("path");
 const express = require("express");
 const helmet = require("helmet");
 const mongoose = require("mongoose");
-const path = require("path");
+const bodyParser = require("body-parser");
+//const dotenv = require("dotenv").config();
+const { errors } = require("celebrate");
 const routerUser = require("./routers/users");
 const routerCard = require("./routers/card");
 const routerAuth = require("./routers/auth");
 const router = require("./routers/index");
-const bodyParser = require("body-parser");
-const dotenv = require("dotenv").config();
 const auth = require("./middlewares/auth");
-const { errors } = require("celebrate");
 const { sendError } = require("./utils/handlerErrors");
+
 const { PORT = 3000, MONGODB_URL = "mongodb://127.0.0.1:27017/mestodb" } =
   process.env;
 

@@ -1,18 +1,16 @@
 const UserModel = require("../models/user");
 const { CustomeError } = require("../utils/handlerErrors");
 const { noFindUser } = require("../errors");
-const { celebrate, Joi } = require("celebrate");
 
-const getUsers = (req, res, next) => {
-  return UserModel.find()
+const getUsers = (req, res, next) =>
+  UserModel.find()
     .then((users) => {
-      return res.status(200).send({ message: users });
+      res.status(200).send({ message: users });
     })
     .catch(next);
-};
 
-const updateProfile = (req, res, next) => {
-  return UserModel.findByIdAndUpdate(
+const updateProfile = (req, res, next) =>
+  UserModel.findByIdAndUpdate(
     req.user._id,
     {
       name: req.body.name,
@@ -23,14 +21,12 @@ const updateProfile = (req, res, next) => {
     .then((user) => {
       if (user) {
         return res.status(200).send({ message: user });
-      } else {
-        throw new CustomeError(noFindUser.code, noFindUser.message);
       }
+      throw new CustomeError(noFindUser.code, noFindUser.message);
     })
     .catch(next);
-};
-const updateAvatar = (req, res, next) => {
-  return UserModel.findByIdAndUpdate(
+const updateAvatar = (req, res, next) =>
+  UserModel.findByIdAndUpdate(
     req.user._id,
     {
       avatar: req.body.avatar,
@@ -44,18 +40,9 @@ const updateAvatar = (req, res, next) => {
       return res.status(200).send({ message: user });
     })
     .catch(next);
-};
 
-const getCurrentUser = (req, res, next) => {
-  return getUser(req.user._id, res, next);
-};
-
-const getUserById = (req, res, next) => {
-  return getUser(req.params.userId, res, next);
-};
-
-const getUser = (userId, res, next) => {
-  return UserModel.findById(userId)
+const getUser = (userId, res, next) =>
+  UserModel.findById(userId)
     .then((user) => {
       if (!user) {
         throw new CustomeError(noFindUser.code, noFindUser.message);
@@ -63,6 +50,13 @@ const getUser = (userId, res, next) => {
       return res.status(200).send({ message: user });
     })
     .catch(next);
+
+const getCurrentUser = (req, res, next) => {
+  getUser(req.user._id, res, next);
+};
+
+const getUserById = (req, res, next) => {
+  getUser(req.params.userId, res, next);
 };
 
 module.exports = {

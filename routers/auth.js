@@ -1,6 +1,6 @@
 const routerAuth = require("express").Router();
-const { createUser, login } = require("../controllers/auth");
 const { celebrate, Joi } = require("celebrate");
+const { createUser, login } = require("../controllers/auth");
 
 routerAuth.post(
   "/signup",
@@ -11,11 +11,11 @@ routerAuth.post(
       about: Joi.string().min(2).max(30),
       name: Joi.string().min(2).max(30),
       avatar: Joi.string().pattern(
-        /^((ftp|http|https):\/\/)?(www\.)?([A-Za-zА-Яа-я0-9]{1}[A-Za-zА-Яа-я0-9\-]*\.?)*\.{1}[A-Za-zА-Яа-я0-9-]{2,8}(\/([\w#!:.?+=&%@!\-\/])*)?/
+        /^((ftp|http|https):\/\/)?(www\.)?([A-Za-zА-Яа-я0-9]{1}[A-Za-zА-Яа-я0-9\-]*\.?)*\.{1}[A-Za-zА-Яа-я0-9-]{2,8}(\/([\w#!:.?+=&%@!\-\/])*)?/,
       ),
     }),
   }),
-  createUser
+  createUser,
 );
 
 routerAuth.post(
@@ -30,7 +30,7 @@ routerAuth.post(
       password: Joi.string().required().min(2),
     }),
   }),
-  login
+  login,
 );
 
 module.exports = routerAuth;
