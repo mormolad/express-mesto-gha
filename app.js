@@ -1,5 +1,6 @@
 const path = require("path");
 const express = require("express");
+const cors = require("cors");
 const helmet = require("helmet");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
@@ -26,6 +27,7 @@ mongoose
   });
 
 const app = express();
+app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(helmet());
