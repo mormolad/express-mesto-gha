@@ -48,9 +48,8 @@ const deleteLike = (req, res, next) =>
     })
     .catch(next);
 
-const putLike = (req, res, next) => {
-  console.log(req.params);
-  return CardModel.findByIdAndUpdate(
+const putLike = (req, res, next) =>
+  CardModel.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
     { new: true, runValidators: true }
@@ -62,7 +61,6 @@ const putLike = (req, res, next) => {
       return res.status(200).send({ message: card });
     })
     .catch(next);
-};
 
 module.exports = {
   getCards,

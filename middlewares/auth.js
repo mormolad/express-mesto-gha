@@ -4,8 +4,8 @@ const { errLogin, noAuth } = require("../errors");
 
 const auth = (req, res, next) => {
   if (
-    !req.headers.authorization
-    || !req.headers.authorization.startsWith("Bearer ")
+    !req.headers.authorization ||
+    !req.headers.authorization.startsWith("Bearer ")
   ) {
     next(new CustomeError(noAuth.code, noAuth.message));
   }
