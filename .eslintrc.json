@@ -13,7 +13,7 @@
     "quotes": ["error", "double", { "avoidEscape": false }],
     "max-len": ["error", { "code": 180 }],
     "arrow-body-style": ["error", "as-needed"],
-    "implicit-arrow-linebreak": ["error", "below"],
+    "implicit-arrow-linebreak": "off",
     "no-trailing-spaces": ["error", { "ignoreComments": true }],
     "consistent-return": "off",
     "no-useless-escape": "off",
@@ -21,6 +21,8 @@
     "spaced-comment": "off",
     "import/no-extraneous-dependencies": "off",
     "operator-linebreak": "off",
-    "comma-dangle": "off"
+    "comma-dangle": "off",
+    "function-paren-newline": "off",
+    "no-console": "off"
   }
 }

@@ -4,8 +4,7 @@ const { noFindCard } = require("../errors");
 
 const getCards = (req, res, next) =>
   CardModel.find()
-    .then((cards) =>
-      res.status(200).send({ message: cards }))
+    .then((cards) => res.status(200).send({ message: cards }))
     .catch(next);
 
 const deleteCard = (req, res, next) =>
@@ -15,7 +14,8 @@ const deleteCard = (req, res, next) =>
         throw new CustomeError(noFindCard.code, noFindCard.message);
       } else if (card.owner === req.user._id) {
         CardModel.deleteOne({ _id: req.params.cardId }).then(() =>
-          res.status(200).send({ message: card }));
+          res.status(200).send({ message: card })
+        );
       } else {
         throw new CustomeError(403, "нельзя удалить чужую катру");
       }
@@ -38,7 +38,7 @@ const deleteLike = (req, res, next) =>
   CardModel.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } }, // убрать _id из массива
-    { new: true },
+    { new: true }
   )
     .then((card) => {
       if (card) {
@@ -53,13 +53,13 @@ const putLike = (req, res, next) => {
   return CardModel.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
-    { new: true, runValidators: true },
+    { new: true, runValidators: true }
   )
     .then((card) => {
       if (!card) {
         throw new CustomeError(noFindCard.code, noFindCard.message);
       }
-      return res.status(200).send({ message: card.likes });
+      return res.status(200).send({ message: card });
     })
     .catch(next);
 };
