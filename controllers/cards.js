@@ -42,7 +42,7 @@ const deleteLike = (req, res, next) =>
   )
     .then((card) => {
       if (card) {
-        return res.status(200).send({ message: card.likes });
+        return res.status(200).send({ message: card });
       }
       throw new CustomeError(noFindCard.code, noFindCard.message);
     })
