@@ -13,15 +13,12 @@ const isJWT = (token) =>
   jwt.verify(token, SECRET_KEY, (err, decoded) => {
     if (err) return false;
     return UserModel.findById(decoded._id)
-      .then((user) =>
-        Boolean(user))
-      .catch(() =>
-        false);
+      .then((user) => Boolean(user))
+      .catch(() => false);
   });
 
 const getPayload = (token) =>
-  jwt.verify(token, SECRET_KEY, (err, decoded) =>
-    decoded);
+  jwt.verify(token, SECRET_KEY, (err, decoded) => decoded);
 
 module.exports = {
   getJWT,

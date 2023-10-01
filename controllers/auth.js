@@ -29,20 +29,22 @@ const login = (req, res, next) => {
 };
 
 const createUser = (req, res, next) => {
-  const {
-    email, password, name, about, avatar,
-  } = req.body;
+  const { email, password, name, about, avatar } = req.body;
   if (!email || !password) {
-    throw new CustomeError(errLogin.code, errLogin.message);
+    return next(new CustomeError(errLogin.code, errLogin.message));
   }
   bcrypt.hash(password, 10).then((hash) => {
     UserModel.create({
-      email, password: hash, name, about, avatar,
+      email,
+      password: hash,
+      name,
+      about,
+      avatar,
     })
       .then((user) => {
         const userRes = user.toObject();
         delete userRes.password;
-        return res.status(201).send({ userRes });
+        return res.status(201).send({ message: userRes });
       })
       .catch(next);
   });
