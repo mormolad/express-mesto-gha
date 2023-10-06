@@ -22,11 +22,9 @@
     "import/no-extraneous-dependencies": "off",
     "operator-linebreak": "off",
     "comma-dangle": "off",
-<<<<<<< HEAD
     "function-paren-newline": "off",
-    "no-console": "off"
-=======
-    "function-paren-newline": "off"
->>>>>>> 3b1e860f5a18329961a37b8f30ed3785ffa6f3f9
+    "no-console": "off",
+    "object-curly-newline": "off",
+    "no-unused-vars": "off"
   }
 }
