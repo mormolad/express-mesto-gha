@@ -1,11 +1,12 @@
 const path = require("path");
 const express = require("express");
 const cors = require("cors");
+const { errors } = require("celebrate");
 const helmet = require("helmet");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 //const dotenv = require("dotenv").config();
-const { errors } = require("celebrate");
+const { limiter } = require("./utils/limiter");
 const routerUser = require("./routers/users");
 const routerCard = require("./routers/card");
 const routerAuth = require("./routers/auth");
@@ -27,6 +28,7 @@ mongoose
   });
 
 const app = express();
+
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")));
@@ -38,6 +40,7 @@ app.get("/crash-test", () => {
     throw new Error("Сервер сейчас упадёт");
   }, 0);
 });
+app.use(limiter);
 app.use(routerAuth);
 app.use(auth);
 app.use(routerUser);

@@ -18,7 +18,7 @@ routerUser.get(
       userId: Joi.string().length(24).hex().required(),
     }),
   }),
-  getUserById,
+  getUserById
 );
 routerUser.patch(
   "/users/me",
@@ -28,17 +28,17 @@ routerUser.patch(
       name: Joi.string().min(2).max(30),
     }),
   }),
-  updateProfile,
+  updateProfile
 );
 routerUser.patch(
   "/users/me/avatar",
   celebrate({
     body: Joi.object().keys({
       avatar: Joi.string().pattern(
-        /^((ftp|http|https):\/\/)?(www\.)?([A-Za-zА-Яа-я0-9]{1}[A-Za-zА-Яа-я0-9\-]*\.?)*\.{1}[A-Za-zА-Яа-я0-9-]{2,8}(\/([\w#!:.?+=&%@!\-\/])*)?/,
+        /^((ftp|http|https):\/\/)?(www\.)?([A-Za-zА-Яа-я0-9]{1}[A-Za-zА-Яа-я0-9\-]*\.?)*\.{1}[A-Za-zА-Яа-я0-9-]{2,8}(\/([\w#!:.?+=&%@!\-\/])*)?/
       ),
     }),
   }),
-  updateAvatar,
+  updateAvatar
 );
 module.exports = routerUser;
